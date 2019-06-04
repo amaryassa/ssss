@@ -40,6 +40,7 @@ function partage_nopartage(id, keys,share ,min_key, max_key) {
          image_url= snapshot.val(); 
          console.log('image_url::::', image_url);  
          $("#image-secret").attr('src', image_url.url_image);
+         $("#lien-secret").attr('href', image_url.url_image);
     });
    
   }

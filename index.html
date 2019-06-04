@@ -132,11 +132,13 @@
              il vous faut au min <span id="min-key"></span> Keys pour voir le secret <br>
              actuellement <span id="number-shares"></span> personne(s)  a/ont partagé son/leurs key 
           </h1>
+          <h2> <span style="color: red" class="number-shares"></span>/ <span class="min-key"></span></h2>
 
           <div class="col-sm-12 content-image">
                 <picture>
                   <img id="image-secret" src="" alt="">
                 </picture>
+                <a href="" id="lien-secret">Le lien</a>
           </div>
       </div>
     
@@ -273,8 +275,11 @@
             console.log('la bas')
             $(".content-image").hide();
             $("#image-secret").attr('src', '');
+            $("#lien-secret").attr('href', '');
           }
+          $(".number-shares").html(shared);
           $("#number-shares").html(shared);
+          $(".min-key").html(min_keyss); 
           $("#min-key").html(min_keyss); 
           $("#max-key").html(max_keyss);
         });
