@@ -18,6 +18,7 @@
      <script src="https://www.gstatic.com/firebasejs/6.1.0/firebase-auth.js"></script>
      <script src="https://www.gstatic.com/firebasejs/6.1.0/firebase-firestore.js"></script>
      <script src="https://www.gstatic.com/firebasejs/6.1.0/firebase-database.js"></script>
+     <script src="https://www.gstatic.com/firebasejs/6.1.0/firebase-storage.js"></script>
     <script src="firebase.js"></script>
     
   </head>
@@ -25,28 +26,36 @@
     <div class="wrap">
       <div id="admin" class="container">
      
-        <h3>Splitting the Secret</h3>
+        <h3>SSSS</h3>
         <div class="well well-lg">
         <form role="form" class="form-horizontal" action="javascript:void(0);">
           <div class="form-group">
-            <label for="original-int256" class="col-sm-4 control-label">256-bit Integer in Base-<span data-value="DISPLAY_BASE"></span> (<em>s</em>)</label>
+            <label for="original-int256" class="col-sm-4 control-label">upload file </label>
             <div class="col-sm-8">
               <div class="input-group">
-                <input type="text" id="original-int256" class="form-control" placeholder="Secret Integer" />
-                <div class="input-group-btn">
+                  <div>
+                      <label for="" class="upload-group">
+                          
+                          <input type="file" class="upload-group" id="file">
+                        </label>
+                  </div>
+                      
+              </div>
+                <input type="text" id="original-int256" class="form-control" placeholder="Secret " />
+                <div class="input-group-btn" style="display: none;">
                   <button id="random-int256" class="btn btn-default">Random</button>
                 </div>
               </div>
             </div>
-          </div>
+          
           <div class="form-group">
-            <label for="pieces-n" class="col-sm-4 control-label">Pieces to Create (<em>n</em>)</label>
+            <label for="pieces-n" class="col-sm-4 control-label">Partager le secret avec : (<em>n</em>)</label>
             <div class="col-sm-8">
             <input type="text" id="pieces-n" class="form-control" placeholder="Pieces" value="10" />
             </div>
           </div>
           <div class="form-group">
-            <label for="pieces-k" class="col-sm-4 control-label">Min. Pieces to Recover (<em>k</em>)</label>
+            <label for="pieces-k" class="col-sm-4 control-label">Min clés nécessaires: (<em>k</em>)</label>
             <div class="col-sm-8">
               <input type="text" id="pieces-k" class="form-control" placeholder="The 'threshold' value"  value="4" />
             </div>
@@ -58,15 +67,14 @@
           </div>
         </form>
         </div>
-        <h4>Generated Pieces of the Secret</h4>
-        <p>These are the <code>n</code> pieces that were created from the integer above. Pick any <code>k</code>
-           and enter them into the recovery section to test it out.</p>
-        <textarea id="generated-pieces" class="form-control" rows="11" placeholder="Hit 'Generate Shards'"></textarea>
+        <h4>LEs clés générées</h4>
+        
+        <textarea id="generated-pieces" class="form-control" rows="11" placeholder=""></textarea>
         
         <hr />
 
-        <h3>Recovering the Secret</h3>
-        <div class="well well-lg">
+        <div class="well well-lg" style="display: none;">
+            <h3>reconstitution de notre secret</h3>
           <form role="form" action="javascript:void(0);" class="form-horizontal">
             <div class="form-group">
               <label for="recovery" class="col-sm-4 control-label">Pieces for Recovery</label>
@@ -87,13 +95,28 @@
             </div>
           </form>
         </div>
-
+      
+      
       </div>
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
       <div id="user" class="container">
           <h1>ID: <span id="mon_id"></span></h1>
 
 
-          <div class="btn btn-success" id="partage">partager ma clé</div>
+          <div class="btn btn-success" id="partage">partager ma clé pour voir l'image </div>
           <div class="btn btn-primary" id="no_partage">Annuler le partage</div>
           <h1> Vous êtes : <span id="max-key"></span> à partager le secret</h1>
           <h1>
@@ -102,19 +125,12 @@
              actuellement <span id="number-shares"></span> personne(s)  a/ont partagé son/leurs key 
           </h1>
 
-
-
-
-
-
-
-
-
-
-
-
+          <div class="col-sm-12 content-image">
+                <picture>
+                  <img id="image-secret" src="" alt="">
+                </picture>
+          </div>
       </div>
-    </div>
     
     
     <script src="http://code.jquery.com/jquery.js"></script>
@@ -166,6 +182,8 @@
         .on('keyup', checkEnableRecoverSecretButton);
 
       $('#generate-pieces').on('click', function () {
+        
+        uploadfile();
         var id=1;
         firebase.database().ref('user').remove();
         var s = new BigInt($('#original-int256').val(), DISPLAY_BASE),
@@ -238,6 +256,15 @@
               max_keyss= usr.max_key;
               console.log("ici", usr.min_key);
               });
+          }
+          if(shared>=min_keyss ) {
+            $(".content-image").show();
+            getUrlImage();
+            console.log('ici')
+          }else{
+            console.log('la bas')
+            $(".content-image").hide();
+            $("#image-secret").attr('src', '');
           }
           $("#number-shares").html(shared);
           $("#min-key").html(min_keyss); 
