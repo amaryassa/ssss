@@ -5,6 +5,8 @@
     
     <!-- Bootstrap boilerplate -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+
     <!--[if lt IE 9]>
       <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
       <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
@@ -20,9 +22,8 @@
     
   </head>
   <body>
-    <a href="https://github.com/karlgluck/ThresholdJS"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png" alt="Fork me on GitHub"></a>
     <div class="wrap">
-      <div class="container">
+      <div id="admin" class="container">
      
         <h3>Splitting the Secret</h3>
         <div class="well well-lg">
@@ -87,7 +88,30 @@
           </form>
         </div>
 
-        <a href="http://www.karlgluck.com" class="pull-right">Implemented by Karl Gluck</a>
+      </div>
+      <div id="user" class="container">
+          <h1>ID: <span id="mon_id"></span></h1>
+
+
+          <div class="btn btn-success" id="partage">partager ma clé</div>
+          <div class="btn btn-primary" id="no_partage">Annuler le partage</div>
+          <h1> Vous êtes : <span id="max-key"></span> à partager le secret</h1>
+          <h1>
+           
+             il vous faut au min <span id="min-key"></span> Keys pour voir le secret <br>
+             actuellement <span id="number-shares"></span> personne(s)  a/ont partagé son/leurs key 
+          </h1>
+
+
+
+
+
+
+
+
+
+
+
 
       </div>
     </div>
@@ -160,7 +184,8 @@
           textarea.val(textarea.val() + piece.x.toString(DISPLAY_BASE) + "," + piece.y.toString(DISPLAY_BASE) + '\n\n');
           
           
-          writeUserData(id, key, 0,k);
+          writeUserData(id, key, 0,k,n);
+
           id++;
         });
       });
@@ -203,23 +228,31 @@
         var refUser = firebase.database().ref('user/');
         refUser.on('value', function(snapshot) {
           var shared= 0;
+           var max_keyss= 0;
+           var min_keyss= 0;
            user = snapshot.val();
           if(user){
             const map1 = user.map(usr => {
               shared= shared+usr.share;
+              min_keyss= usr.min_key;
+              max_keyss= usr.max_key;
+              console.log("ici", usr.min_key);
               });
           }
-            console.log(shared)
+          $("#number-shares").html(shared);
+          $("#min-key").html(min_keyss); 
+          $("#max-key").html(max_keyss);
         });
       }
 
 
 
-      function writeUserData(id, keys, share,min_key) {
+      function writeUserData(id, keys, share,min_key, max_key) {
         firebase.database().ref('user/'+id).set({
           keys: keys,
           share: share,
-          min_key: min_key
+          min_key: min_key,
+          max_key :max_key
         });
       }
 
@@ -237,4 +270,7 @@
 
 
   </script>
+
+  <script src="user.js"></script>
+  <script src="uploadimage.js"></script>
 </html>
